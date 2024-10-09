@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<view xmlns="http://jmix.io/schema/flowui/view"
+  title="msg://schoolDetailView.title"
+  focusComponent="form">
+  <data>
+    <instance id="schoolDc"
+      class="com.fis.bnk.studentmanagement.entity.School">
+      <fetchPlan extends="_base"/>
+      <loader id="schoolDl"/>
+    </instance>
+  </data>
+  <facets>
+    <dataLoadCoordinator auto="true"/>
+  </facets>
+  <actions>
+    <action id="saveAction" type="detail_saveClose"/>
+    <action id="closeAction" type="detail_close"/>
+  </actions>
+  <layout>
+    <formLayout id="form" dataContainer="schoolDc">
+      <textField id="schoolCodeField" property="code"/>
+      <textField id="schoolNameField" property="name"/>
+    </formLayout>
+    <hbox id="detailActions">
+      <button id="saveAndCloseBtn" action="saveAction"/>
+      <button id="closeBtn" action="closeAction"/>
+    </hbox>
+  </layout>
+</view>
