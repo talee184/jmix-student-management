@@ -50,3 +50,6 @@ test {
 vaadin {
     optimizeBundle = false
 }
+bootJar {
+    mainClass = 'com.fis.bnk.studentmanagement.StudentManagementApplication'
+}

@@ -3,11 +3,28 @@
   title="msg://studentDetailView.title"
   focusComponent="form">
   <data>
+    <collection id="subjectDc" class="com.fis.bnk.studentmanagement.entity.Subject">
+      <loader id="subjectDl" readOnly="true">
+        <query>
+          <![CDATA[select s from Subject s order by s.name asc]]>
+        </query>
+      </loader>
+      <fetchPlan extends="_base"/>
+    </collection>
     <instance id="studentDc"
       class="com.fis.bnk.studentmanagement.entity.Student">
       <fetchPlan extends="_base"/>
       <loader id="studentDl"/>
     </instance>
+    <!-- Data container cho bảng điểm -->
+    <collection id="gradeDc" class="com.fis.bnk.studentmanagement.entity.Grade">
+      <loader id="gradeDl">
+        <query>
+          <![CDATA[select g from Grade g where g.student = :student]]>
+        </query>
+      </loader>
+      <fetchPlan extends="_base"/>
+    </collection>
   </data>
   <facets>
     <dataLoadCoordinator auto="true"/>
@@ -24,9 +41,23 @@
       <textField id="addressField" property="address"/>
       <textField id="phoneNumberField" property="phoneNumber"/>
     </formLayout>
+
     <hbox id="detailActions">
       <button id="saveAndCloseBtn" action="saveAction"/>
       <button id="closeBtn" action="closeAction"/>
+      <button id="addGradeBtn" text="Nhập điểm" icon="PLUS"/>
     </hbox>
+
+    <vbox>
+      <label value="Bang diem" styleName="h2"/>
+
+      <!-- Hiển thị bảng điểm -->
+      <dataGrid id="gradesTable" dataContainer="gradeDc">
+        <columns>
+          <column property="subject.name"/>
+          <column property="score"/>
+        </columns>
+      </dataGrid>
+    </vbox>
   </layout>
 </view>

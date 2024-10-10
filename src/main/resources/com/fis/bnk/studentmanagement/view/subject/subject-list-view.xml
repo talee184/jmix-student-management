@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <view xmlns="http://jmix.io/schema/flowui/view"
   xmlns:c="http://jmix.io/schema/flowui/jpql-condition"
-  title="msg://schoolListView.title"
-  focusComponent="schoolsDataGrid">
+  title="msg://subjectListView.title"
+  focusComponent="subjectsDataGrid">
   <data>
-    <collection id="schoolsDc"
-      class="com.fis.bnk.studentmanagement.entity.School">
+    <collection id="subjectsDc"
+      class="com.fis.bnk.studentmanagement.entity.Subject">
       <fetchPlan extends="_base"/>
-      <loader id="schoolsDl">
+      <loader id="subjectsDl">
         <query>
-          <![CDATA[select s from School s ]]>
+          <![CDATA[select s from Subject s]]>
           <condition>
             <and>
               <c:jpql>
-                <c:where>s.code like :code</c:where>
+                <c:where>lower(s.code) like :code</c:where>
               </c:jpql>
               <c:jpql>
-                <c:where>s.name like :name</c:where>
+                <c:where>lower(s.name) like :name</c:where>
               </c:jpql>
             </and>
           </condition>
@@ -41,17 +41,16 @@
       <textField id="nameField" placeholder="Search by name" classNames="text-field"/>
       <button id="searchBtn" text="Search" icon="SEARCH"/>
     </hbox>
-
     <hbox id="buttonsPanel" classNames="buttons-panel">
-      <button id="createBtn" action="schoolsDataGrid.create"/>
-      <button id="editBtn" action="schoolsDataGrid.edit"/>
-      <button id="removeBtn" action="schoolsDataGrid.remove"/>
-      <simplePagination id="pagination" dataLoader="schoolsDl"/>
+      <button id="createBtn" action="subjectsDataGrid.create"/>
+      <button id="editBtn" action="subjectsDataGrid.edit"/>
+      <button id="removeBtn" action="subjectsDataGrid.remove"/>
+      <simplePagination id="pagination" dataLoader="subjectsDl"/>
     </hbox>
-    <dataGrid id="schoolsDataGrid"
+    <dataGrid id="subjectsDataGrid"
       width="100%"
       minHeight="20em"
-      dataContainer="schoolsDc"
+      dataContainer="subjectsDc"
       columnReorderingAllowed="true">
       <actions>
         <action id="create" type="list_create"/>

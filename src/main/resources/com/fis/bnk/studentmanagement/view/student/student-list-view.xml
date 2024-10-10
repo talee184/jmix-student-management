@@ -6,10 +6,29 @@
   <data>
     <collection id="studentsDc"
       class="com.fis.bnk.studentmanagement.entity.Student">
-      <fetchPlan extends="_base"/>
-      <loader id="studentsDl" readOnly="true">
+      <fetchPlan extends="_base">
+        <property name="subjects" fetchPlan="_base"/>
+        <property name="studentClass" fetchPlan="_base"/>
+      </fetchPlan>
+      <loader id="studentsDl">
         <query>
-          <![CDATA[select e from Student e]]>
+          <![CDATA[select e from Student e ]]>
+          <condition>
+            <and>
+              <c:jpql>
+                <c:where>e.code like :code</c:where>
+              </c:jpql>
+              <c:jpql>
+                <c:where>e.name like :name</c:where>
+              </c:jpql>
+              <c:jpql>
+                <c:where>e.address like :address</c:where>
+              </c:jpql>
+              <c:jpql>
+                <c:where>e.phoneNumber like :phoneNumber</c:where>
+              </c:jpql>
+            </and>
+          </condition>
         </query>
       </loader>
     </collection>
@@ -17,7 +36,6 @@
   <facets>
     <dataLoadCoordinator auto="true"/>
     <urlQueryParameters>
-      <genericFilter component="genericFilter"/>
       <pagination component="pagination"/>
     </urlQueryParameters>
   </facets>
@@ -25,18 +43,27 @@
     <action id="selectAction" type="lookup_select"/>
     <action id="discardAction" type="lookup_discard"/>
   </actions>
-  <layout>
-    <genericFilter id="genericFilter"
-      dataLoader="studentsDl">
-      <properties include=".*"/>
-    </genericFilter>
+  <layout classNames="form-container">
+    <!-- Add search fields for Code, Name, Address, Phone Number -->
+    <hbox spacing="true" classNames="form-container">
+      <textField id="codeField" placeholder="Search by code" classNames="text-field"/>
+      <textField id="nameField" placeholder="Search by name" classNames="text-field"/>
+      <textField id="addressField" placeholder="Search by address" classNames="text-field"/>
+      <textField id="phoneNumberField" placeholder="Search by phone number" classNames="text-field"/>
+      <button id="searchBtn" text="Search" icon="SEARCH"/>
+    </hbox>
+
+    <!-- Action buttons -->
     <hbox id="buttonsPanel" classNames="buttons-panel">
       <button id="createBtn" action="studentsDataGrid.create"/>
       <button id="editBtn" action="studentsDataGrid.edit"/>
       <button id="removeBtn" action="studentsDataGrid.remove"/>
       <simplePagination id="pagination" dataLoader="studentsDl"/>
     </hbox>
+
+    <!-- DataGrid -->
     <dataGrid id="studentsDataGrid"
+      classNames="data-grid"
       width="100%"
       minHeight="20em"
       dataContainer="studentsDc"
@@ -52,8 +79,11 @@
         <column property="birthDate"/>
         <column property="address"/>
         <column property="phoneNumber"/>
+        <column property="studentClass"/>
       </columns>
     </dataGrid>
+
+    <!-- Lookup actions -->
     <hbox id="lookupActions" visible="false">
       <button id="selectBtn" action="selectAction"/>
       <button id="discardBtn" action="discardAction"/>

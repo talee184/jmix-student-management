@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+  xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd"
+  objectQuotingStrategy="QUOTE_ONLY_RESERVED_WORDS">
+  <changeSet id="1" author="student-management">
+    <createTable tableName="GRADE">
+      <column name="ID" type="UUID">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="PK_GRADE"/>
+      </column>
+      <column name="STUDENT_ID" type="UUID"/>
+      <column name="SUBJECT_ID" type="UUID"/>
+      <column name="SCORE" type="DECIMAL(19)"/>
+      <column name="VERSION" type="INT">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+  </changeSet>
+  <changeSet id="2" author="student-management">
+    <createTable tableName="STUDENT_SUBJECT_LINK">
+      <column name="STUDENT_ID" type="UUID">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="PK_STUDENT_SUBJECT_LINK"/>
+      </column>
+      <column name="SUBJECT_ID" type="UUID">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="PK_STUDENT_SUBJECT_LINK"/>
+      </column>
+    </createTable>
+  </changeSet>
+  <changeSet id="3" author="student-management">
+    <createTable tableName="SUBJECT">
+      <column name="ID" type="UUID">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="PK_SUBJECT"/>
+      </column>
+      <column name="NAME" type="VARCHAR(255)"/>
+      <column name="VERSION" type="INT">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+  </changeSet>
+  <changeSet id="4" author="student-management">
+    <createTable tableName="SUBJECT_STUDENT_LINK">
+      <column name="STUDENT_ID" type="UUID">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="PK_SUBJECT_STUDENT_LINK"/>
+      </column>
+      <column name="SUBJECT_ID" type="UUID">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="PK_SUBJECT_STUDENT_LINK"/>
+      </column>
+    </createTable>
+  </changeSet>
+  <changeSet id="5" author="student-management">
+    <createIndex indexName="IDX_GRADE_STUDENT" tableName="GRADE">
+      <column name="STUDENT_ID"/>
+    </createIndex>
+
+    <addForeignKeyConstraint baseColumnNames="STUDENT_ID" baseTableName="GRADE"
+      constraintName="FK_GRADE_ON_STUDENT" referencedColumnNames="ID"
+      referencedTableName="STUDENT"/>
+  </changeSet>
+  <changeSet id="6" author="student-management">
+    <createIndex indexName="IDX_GRADE_SUBJECT" tableName="GRADE">
+      <column name="SUBJECT_ID"/>
+    </createIndex>
+
+    <addForeignKeyConstraint baseColumnNames="SUBJECT_ID" baseTableName="GRADE"
+      constraintName="FK_GRADE_ON_SUBJECT" referencedColumnNames="ID"
+      referencedTableName="SUBJECT"/>
+  </changeSet>
+  <changeSet id="7" author="student-management">
+    <addForeignKeyConstraint baseColumnNames="STUDENT_ID" baseTableName="STUDENT_SUBJECT_LINK"
+      constraintName="FK_STUSUB_ON_STUDENT" referencedColumnNames="ID"
+      referencedTableName="STUDENT"/>
+  </changeSet>
+  <changeSet id="8" author="student-management">
+    <addForeignKeyConstraint baseColumnNames="SUBJECT_ID" baseTableName="STUDENT_SUBJECT_LINK"
+      constraintName="FK_STUSUB_ON_SUBJECT" referencedColumnNames="ID"
+      referencedTableName="SUBJECT"/>
+  </changeSet>
+  <changeSet id="9" author="student-management">
+    <addForeignKeyConstraint baseColumnNames="STUDENT_ID" baseTableName="SUBJECT_STUDENT_LINK"
+      constraintName="FK_SUBSTU_ON_STUDENT" referencedColumnNames="ID"
+      referencedTableName="STUDENT"/>
+  </changeSet>
+  <changeSet id="10" author="student-management">
+    <addForeignKeyConstraint baseColumnNames="SUBJECT_ID" baseTableName="SUBJECT_STUDENT_LINK"
+      constraintName="FK_SUBSTU_ON_SUBJECT" referencedColumnNames="ID"
+      referencedTableName="SUBJECT"/>
+  </changeSet>
+</databaseChangeLog>

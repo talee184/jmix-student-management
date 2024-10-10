@@ -9,12 +9,15 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Index;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
 import jakarta.persistence.Version;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 @JmixEntity
@@ -40,6 +43,12 @@ public class Student {
   @Temporal(TemporalType.DATE)
   private Date birthDate;
 
+  @JoinTable(name = "STUDENT_SUBJECT_LINK",
+      joinColumns = @JoinColumn(name = "STUDENT_ID"),
+      inverseJoinColumns = @JoinColumn(name = "SUBJECT_ID"))
+  @ManyToMany
+  private List<Subject> subjects;
+
   @Column(name = "ADDRESS")
   private String address;
 
@@ -53,6 +62,14 @@ public class Student {
   @Column(name = "VERSION", nullable = false)
   @Version
   private Integer version;
+
+  public List<Subject> getSubjects() {
+    return subjects;
+  }
+
+  public void setSubjects(List<Subject> subjects) {
+    this.subjects = subjects;
+  }
 
   public Class getStudentClass() {
     return studentClass;

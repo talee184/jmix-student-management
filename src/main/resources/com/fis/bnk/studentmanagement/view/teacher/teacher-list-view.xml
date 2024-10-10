@@ -7,9 +7,25 @@
     <collection id="teachersDc"
       class="com.fis.bnk.studentmanagement.entity.Teacher">
       <fetchPlan extends="_base"/>
-      <loader id="teachersDl" readOnly="true">
+      <loader id="teachersDl">
         <query>
-          <![CDATA[select e from Teacher e]]>
+            <![CDATA[select t from Teacher t ]]>
+            <condition>
+              <and>
+                <c:jpql>
+                  <c:where>lower(t.name) like :name</c:where>
+                </c:jpql>
+                <c:jpql>
+                  <c:where>t.age = :age</c:where>
+                </c:jpql>
+                <c:jpql>
+                  <c:where>lower(t.address) like :address</c:where>
+                </c:jpql>
+                <c:jpql>
+                  <c:where>t.phoneNumber like :phoneNumber</c:where>
+                </c:jpql>
+              </and>
+            </condition>
         </query>
       </loader>
     </collection>
@@ -17,7 +33,6 @@
   <facets>
     <dataLoadCoordinator auto="true"/>
     <urlQueryParameters>
-      <genericFilter component="genericFilter"/>
       <pagination component="pagination"/>
     </urlQueryParameters>
   </facets>
@@ -25,11 +40,15 @@
     <action id="selectAction" type="lookup_select"/>
     <action id="discardAction" type="lookup_discard"/>
   </actions>
-  <layout>
-    <genericFilter id="genericFilter"
-      dataLoader="teachersDl">
-      <properties include=".*"/>
-    </genericFilter>
+  <layout classNames="form-container">
+    <!-- Add search fields for Code, Name, Address, Phone Number -->
+    <hbox spacing="true" classNames="form-container">
+      <textField id="nameField" placeholder="Search by name" classNames="text-field"/>
+      <textField id="ageField" placeholder="Search by age" classNames="text-field"/>
+      <textField id="addressField" placeholder="Search by address" classNames="text-field"/>
+      <textField id="phoneNumberField" placeholder="Search by phone number" classNames="text-field"/>
+      <button id="searchBtn" text="Search" icon="SEARCH"/>
+    </hbox>
     <hbox id="buttonsPanel" classNames="buttons-panel">
       <button id="createBtn" action="teachersDataGrid.create"/>
       <button id="editBtn" action="teachersDataGrid.edit"/>

@@ -1,7 +1,6 @@
-package com.fis.bnk.studentmanagement.view.school;
+package com.fis.bnk.studentmanagement.view.subject;
 
-import com.fis.bnk.studentmanagement.entity.School;
-import com.fis.bnk.studentmanagement.entity.Student;
+import com.fis.bnk.studentmanagement.entity.Subject;
 import com.fis.bnk.studentmanagement.view.main.MainView;
 import com.vaadin.flow.component.ClickEvent;
 import com.vaadin.flow.router.Route;
@@ -17,12 +16,12 @@ import io.jmix.flowui.view.ViewController;
 import io.jmix.flowui.view.ViewDescriptor;
 
 
-@Route(value = "schools", layout = MainView.class)
-@ViewController("School.list")
-@ViewDescriptor("school-list-view.xml")
-@LookupComponent("schoolsDataGrid")
+@Route(value = "subjects", layout = MainView.class)
+@ViewController("Subject.list")
+@ViewDescriptor("subject-list-view.xml")
+@LookupComponent("subjectsDataGrid")
 @DialogMode(width = "64em")
-public class SchoolListView extends StandardListView<School> {
+public class SubjectListView extends StandardListView<Subject> {
 
   @ViewComponent
   private TypedTextField<String> codeField;        // Inject the codeField component
@@ -31,26 +30,24 @@ public class SchoolListView extends StandardListView<School> {
   private TypedTextField<String> nameField;        // Inject the nameField component
 
   @ViewComponent
-  private CollectionLoader<School> schoolsDl;
-
-
+  private CollectionLoader<Subject> subjectsDl;
   @Subscribe("searchBtn")
   public void onSearchButtonClick(final ClickEvent<JmixButton> event) {
     String codeText = codeField.getValue();         // Get search input for code
     String nameText = nameField.getValue();         // Get search input for name
 
     if (codeText != null && !codeText.isEmpty()) {
-      schoolsDl.setParameter("code", "%" + codeText.toLowerCase() + "%");
+      subjectsDl.setParameter("code", "%" + codeText.toLowerCase() + "%");
     } else {
-      schoolsDl.removeParameter("code");
+      subjectsDl.removeParameter("code");
     }
 
     if (nameText != null && !nameText.isEmpty()) {
-      schoolsDl.setParameter("name", "%" + nameText.toLowerCase() + "%");
+      subjectsDl.setParameter("name", "%" + nameText.toLowerCase() + "%");
     } else {
-      schoolsDl.removeParameter("name");
+      subjectsDl.removeParameter("name");
     }
 
-    schoolsDl.load();  // Reload the data with new search criteria
+    subjectsDl.load();  // Reload the data with new search criteria
   }
 }
