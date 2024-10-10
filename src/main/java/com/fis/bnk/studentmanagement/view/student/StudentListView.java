@@ -45,30 +45,23 @@ public class StudentListView extends StandardListView<Student> {
     String addressText = addressField.getValue();   // Get search input for address
     String phoneText = phoneNumberField.getValue(); // Get search input for phone number
 
-    if (codeText != null && !codeText.isEmpty()) {
-      studentsDl.setParameter("code", "%" + codeText.toLowerCase() + "%");
-    } else {
-      studentsDl.removeParameter("code");
-    }
-
-    if (nameText != null && !nameText.isEmpty()) {
-      studentsDl.setParameter("name", "%" + nameText.toLowerCase() + "%");
-    } else {
-      studentsDl.removeParameter("name");
-    }
-
-    if (addressText != null && !addressText.isEmpty()) {
-      studentsDl.setParameter("address", "%" + addressText.toLowerCase() + "%");
-    } else {
-      studentsDl.removeParameter("address");
-    }
-
-    if (phoneText != null && !phoneText.isEmpty()) {
-      studentsDl.setParameter("phoneNumber", "%" + phoneText.toLowerCase() + "%");
-    } else {
-      studentsDl.removeParameter("phoneNumber");
-    }
+    // Set search parameters based on the user's input
+    setSearchParameter("code", codeText);
+    setSearchParameter("name", nameText);
+    setSearchParameter("address", addressText);
+    setSearchParameter("phoneNumber", phoneText);
 
     studentsDl.load();  // Reload the data with new search criteria
   }
+  /**
+   * Helper method to set or remove the search parameter based on the input.
+   * If the input is null or empty, it removes the parameter.
+   * Otherwise, it sets the parameter using a wildcard search (LIKE '%input%').
+   */
+  private void setSearchParameter(String parameterName, String parameterValue) {
+    if (parameterValue != null && !parameterValue.trim().isEmpty()) {
+      studentsDl.setParameter(parameterName, "%" + parameterValue.trim().toLowerCase() + "%");
+    } else {
+      studentsDl.removeParameter(parameterName);
+    }}
 }
