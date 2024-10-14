@@ -5,7 +5,9 @@
   <data>
     <instance id="teacherDc"
       class="com.fis.bnk.studentmanagement.entity.Teacher">
-      <fetchPlan extends="_base"/>
+      <fetchPlan extends="_base">
+        <property name="school" fetchPlan="_base"/>
+      </fetchPlan>
       <loader id="teacherDl"/>
     </instance>
   </data>
@@ -22,6 +24,12 @@
       <textField id="ageField" property="age"/>
       <textField id="addressField" property="address"/>
       <textField id="phoneNumberField" property="phoneNumber"/>
+      <entityPicker id="schoolField" property="school">
+        <actions>
+          <action id="entityLookup" type="entity_lookup"/>
+          <action id="entityClear" type="entity_clear"/>
+        </actions>
+      </entityPicker>
     </formLayout>
     <hbox id="detailActions">
       <button id="saveAndCloseBtn" action="saveAction"/>

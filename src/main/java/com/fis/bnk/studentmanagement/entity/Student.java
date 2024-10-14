@@ -44,8 +44,8 @@ public class Student {
   private Date birthDate;
 
   @JoinTable(name = "STUDENT_SUBJECT_LINK",
-      joinColumns = @JoinColumn(name = "STUDENT_ID"),
-      inverseJoinColumns = @JoinColumn(name = "SUBJECT_ID"))
+      joinColumns = @JoinColumn(name = "STUDENT_ID", referencedColumnName = "ID"),
+      inverseJoinColumns = @JoinColumn(name = "SUBJECT_ID", referencedColumnName = "ID"))
   @ManyToMany
   private List<Subject> subjects;
 

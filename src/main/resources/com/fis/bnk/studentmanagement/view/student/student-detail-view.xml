@@ -54,10 +54,22 @@
       <!-- Hiển thị bảng điểm -->
       <dataGrid id="gradesTable" dataContainer="gradeDc">
         <columns>
-          <column property="subject.name"/>
-          <column property="score"/>
+          <column property="subject.name" editable="true"/>
+          <column property="score" editable="true"/>
         </columns>
+        <!-- Action buttons (Edit and Delete) for the DataGrid -->
+        <actions>
+          <action id="editAction" text="Edit" icon="PENCIL"/>
+          <action id="removeAction" text="Delete" icon="TRASH"/>
+        </actions>
       </dataGrid>
+      <!-- Action buttons outside the DataGrid for editing and removing rows -->
+      <hbox spacing="true">
+        <button id="editBtn" action="gradesTable.editAction" text="Edit Selected" icon="PENCIL"/>
+        <button id="removeBtn" action="gradesTable.removeAction" text="Delete Selected" icon="TRASH"/>
+<!--        <button id="saveBtn" text="Save Changes" icon="CHECK" themeNames="success"/>-->
+        <button id="cancelBtn" text="Cancel Changes" icon="CLOSE" themeNames="error"/>
+      </hbox>
     </vbox>
   </layout>
 </view>

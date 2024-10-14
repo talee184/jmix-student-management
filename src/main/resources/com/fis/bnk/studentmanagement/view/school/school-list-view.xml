@@ -7,19 +7,9 @@
     <collection id="schoolsDc"
       class="com.fis.bnk.studentmanagement.entity.School">
       <fetchPlan extends="_base"/>
-      <loader id="schoolsDl">
+      <loader id="schoolsDl" readOnly="true">
         <query>
-          <![CDATA[select s from School s ]]>
-          <condition>
-            <and>
-              <c:jpql>
-                <c:where>s.code like :code</c:where>
-              </c:jpql>
-              <c:jpql>
-                <c:where>s.name like :name</c:where>
-              </c:jpql>
-            </and>
-          </condition>
+          <![CDATA[select e from School e]]>
         </query>
       </loader>
     </collection>
@@ -27,6 +17,7 @@
   <facets>
     <dataLoadCoordinator auto="true"/>
     <urlQueryParameters>
+      <genericFilter component="genericFilter"/>
       <pagination component="pagination"/>
     </urlQueryParameters>
   </facets>
@@ -34,14 +25,11 @@
     <action id="selectAction" type="lookup_select"/>
     <action id="discardAction" type="lookup_discard"/>
   </actions>
-  <layout classNames="form-container">
-    <!-- Add search fields for Code, Name, Address, Phone Number -->
-    <hbox spacing="true" classNames="form-container">
-      <textField id="codeField" placeholder="Search by code" classNames="text-field"/>
-      <textField id="nameField" placeholder="Search by name" classNames="text-field"/>
-      <button id="searchBtn" text="Search" icon="SEARCH"/>
-    </hbox>
-
+  <layout>
+    <genericFilter id="genericFilter"
+      dataLoader="schoolsDl">
+      <properties include=".*"/>
+    </genericFilter>
     <hbox id="buttonsPanel" classNames="buttons-panel">
       <button id="createBtn" action="schoolsDataGrid.create"/>
       <button id="editBtn" action="schoolsDataGrid.edit"/>

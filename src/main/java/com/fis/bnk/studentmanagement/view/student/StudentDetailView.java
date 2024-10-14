@@ -14,7 +14,9 @@ import io.jmix.flowui.app.inputdialog.DialogActions;
 import io.jmix.flowui.app.inputdialog.DialogOutcome;
 import io.jmix.flowui.app.inputdialog.InputParameter;
 import io.jmix.flowui.component.combobox.JmixComboBox;
+import io.jmix.flowui.component.grid.DataGrid;
 import io.jmix.flowui.component.textfield.TypedTextField;
+import io.jmix.flowui.data.grid.ContainerDataGridItems;
 import io.jmix.flowui.kit.component.button.JmixButton;
 import io.jmix.flowui.model.CollectionContainer;
 import io.jmix.flowui.model.CollectionLoader;
@@ -28,6 +30,8 @@ import io.jmix.flowui.view.ViewComponent;
 import io.jmix.flowui.view.ViewController;
 import io.jmix.flowui.view.ViewDescriptor;
 import java.math.BigDecimal;
+import java.util.List;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @Route(value = "students/:id", layout = MainView.class)
@@ -54,6 +58,9 @@ public class StudentDetailView extends StandardDetailView<Student> {
   private DataContext dataContext;
   @ViewComponent
   private CollectionLoader<Grade> gradeDl;  // Sử dụng @ViewComponent để lấy loader từ XML
+  @ViewComponent
+  private DataGrid<Grade> gradesTable;  // Reference to DataGrid
+
 
 
   @Subscribe("addGradeBtn")
@@ -77,8 +84,6 @@ public class StudentDetailView extends StandardDetailView<Student> {
             BigDecimal score = scoreDouble != null ? BigDecimal.valueOf(scoreDouble) : null;
             // Kiểm tra giá trị
             if (selectedSubject != null && score != null) {
-              // Lấy student từ data container
-              Student student = studentDc.getItem();
 
               // Check if the subject already exists in the current gradeDc
               boolean subjectExists = gradeDc.getItems().stream()
@@ -120,5 +125,65 @@ public class StudentDetailView extends StandardDetailView<Student> {
       gradeDl.setParameter("student", student);
       gradeDl.load();
     }
+  }
+  // Helper method to get the single selected item from the DataGrid
+  private Optional<Grade> getSingleSelectedGrade() {
+    return gradesTable.getSelectedItems().stream().findFirst();  // Use stream to get a single item
+  }
+  // Handler for editing a grade
+  @Subscribe("editBtn")
+  public void onEditBtnClick(final ClickEvent<JmixButton> event) {
+    getSingleSelectedGrade().ifPresent(selectedGrade -> {
+      gradesTable.getEditor().editItem(selectedGrade);  // Correct usage of editor to edit the selected item
+    });
+  }
+
+  @Subscribe("removeBtn")
+  public void onRemoveBtnClick(final ClickEvent<JmixButton> event) {
+    getSingleSelectedGrade().ifPresent(selectedGrade -> {
+      dataContext.remove(selectedGrade);  // Mark for removal in DataContext
+      gradeDc.getMutableItems().remove(selectedGrade);  // Remove from gradeDc
+
+      // Update the DataGrid items after removal
+      gradesTable.setItems(gradeDc.getItems());
+    });
+  }
+  // Handler for canceling grade edits (Rollback when cancel)
+  @Subscribe("cancelBtn")
+  public void onCancelBtnClick(final ClickEvent<JmixButton> event) {
+      gradesTable.getEditor().cancel();  // Hủy bỏ các thay đổi trong chế độ chỉnh sửa
+      reloadGradeData();  // Reload original data from the database to rollback changes
+
+      notifications.create("Thay đổi đã bị hủy!")
+          .withType(Type.WARNING)
+          .withDuration(3000)  // Show the notification for 3 seconds
+          .show();
+  }
+  // Reload grades from the database to rollback unsaved changes
+  private void reloadGradeData() {
+    // Clear the current items in gradeDc
+    gradeDc.getMutableItems().clear();
+
+    // Get the currently selected student
+    Student student = studentDc.getItem();
+
+
+    if (student != null) {
+      // Query the database for grades associated with the current student
+      List<Grade> grades = dataManager.load(Grade.class)
+          .query("select g from Grade g join fetch g.subject left join fetch g.subject.students where g.student = :student")
+          .parameter("student", student)
+          .list();
+
+      // Merge each grade into DataContext and add to gradeDc
+      for (Grade grade : grades) {
+        grade.setStudent(student);
+        Grade grade1 = dataContext.merge(grade);
+        gradeDc.getMutableItems().add(grade1);
+      }
+    }
+
+    // Reset the DataGrid items to reflect the reloaded data
+    gradesTable.setItems(new ContainerDataGridItems<>(gradeDc));
   }
 }

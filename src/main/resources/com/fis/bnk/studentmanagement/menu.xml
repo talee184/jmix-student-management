@@ -3,14 +3,14 @@
 
     <menu id="application" title="msg://com.fis.bnk.studentmanagement/menu.application.title" opened="true">
         <item view="User.list" title="msg://com.fis.bnk.studentmanagement.view.user/UserListView.title"/>
-      <item view="School.list"
-        title="msg://com.fis.bnk.studentmanagement.view.school/schoolListView.title"/>
-      <item view="Teacher.list"
-        title="msg://com.fis.bnk.studentmanagement.view.teacher/teacherListView.title"/>
       <item view="Subject.list"
         title="msg://com.fis.bnk.studentmanagement.view.subject/subjectListView.title"/>
       <item view="Student.list"
         title="msg://com.fis.bnk.studentmanagement.view.student/studentListView.title"/>
+      <item view="School.list"
+        title="msg://com.fis.bnk.studentmanagement.view.school/schoolListView.title"/>
+      <item view="Teacher.list"
+        title="msg://com.fis.bnk.studentmanagement.view.teacher/teacherListView.title"/>
     </menu>
 
 </menu-config>

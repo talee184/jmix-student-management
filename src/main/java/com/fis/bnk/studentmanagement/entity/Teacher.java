@@ -1,17 +1,23 @@
 package com.fis.bnk.studentmanagement.entity;
 
 import io.jmix.core.entity.annotation.JmixGeneratedValue;
-import io.jmix.core.metamodel.annotation.InstanceName;
 import io.jmix.core.metamodel.annotation.JmixEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Index;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.Version;
+import jakarta.validation.constraints.NotNull;
 import java.util.UUID;
 
 @JmixEntity
-@Table(name = "TEACHER")
+@Table(name = "TEACHER", indexes = {
+    @Index(name = "IDX_TEACHER_SCHOOL", columnList = "SCHOOL_ID")
+})
 @Entity
 public class Teacher {
 
@@ -20,7 +26,6 @@ public class Teacher {
   @Id
   private UUID id;
 
-  @InstanceName
   @Column(name = "NAME")
   private String name;
 
@@ -33,9 +38,22 @@ public class Teacher {
   @Column(name = "PHONE_NUMBER")
   private String phoneNumber;
 
+  @NotNull
+  @ManyToOne(fetch = FetchType.LAZY, optional = false)
+  @JoinColumn(name = "SCHOOL_ID", nullable = false)  // Foreign key column in TEACHER table
+  private School school;
+
   @Column(name = "VERSION", nullable = false)
   @Version
   private Integer version;
+
+  public School getSchool() {
+    return school;
+  }
+
+  public void setSchool(School school) {
+    this.school = school;
+  }
 
   public String getPhoneNumber() {
     return phoneNumber;
